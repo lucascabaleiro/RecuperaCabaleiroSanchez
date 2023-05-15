@@ -694,7 +694,15 @@
     </property>
     <addaction name="actionSalir"/>
    </widget>
+   <widget class="QMenu" name="menuInformes">
+    <property name="title">
+     <string>Informes</string>
+    </property>
+    <addaction name="actionListado_Trasteros"/>
+    <addaction name="actionListado_Alquileres"/>
+   </widget>
    <addaction name="menuArchivo"/>
+   <addaction name="menuInformes"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -737,6 +745,16 @@
   <action name="actionSalir">
    <property name="text">
     <string>Salir</string>
+   </property>
+  </action>
+  <action name="actionListado_Trasteros">
+   <property name="text">
+    <string>Listado Trasteros</string>
+   </property>
+  </action>
+  <action name="actionListado_Alquileres">
+   <property name="text">
+    <string>Listado Alquileres</string>
    </property>
   </action>
  </widget>

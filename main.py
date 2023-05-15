@@ -1,6 +1,8 @@
 import conexion
 from PyQt6 import QtWidgets
 import sys
+
+import informes
 import var
 
 import events
@@ -21,6 +23,7 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnLimpiar.triggered.connect(events.limpiar)
         var.ui.btnSalir.triggered.connect(events.salir)
         var.ui.actionSalir.triggered.connect(events.salir)
+        var.ui.actionListado_Trasteros.triggered.connect(informes.Informes.listTrasteros)
 
 if __name__ == '__main__':
     conexion.Conexion.db_connect('bdrecupera.db')
