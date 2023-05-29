@@ -8,10 +8,18 @@ def btn_baja(self):
     conexion.Conexion.bajaTrastero(self)
 def btn_modif(self):
     conexion.Conexion.modificarTrastero(self)
+def btnInsertarCliente(self):
+    conexion.Conexion.insertarCliente(self)
+def btnBajaCliente(self):
+    conexion.Conexion.bajaCliente(self)
 def limpiar(self):
     var.ui.edtM2.setText('')
     var.ui.edtPrecio.setText('')
     var.ui.lblid.setText('')
+    var.ui.lblid_cliente.setText('')
+    var.ui.edtNombreCliente.setText('')
+    var.ui.edtDireccionCliente.setText('')
+    var.ui.edtTelefonoCliente.setText('')
     msg = QtWidgets.QMessageBox()
     msg.setWindowTitle('Aviso')
     msg.setIcon(QtWidgets.QMessageBox.Icon.Information)
@@ -28,3 +36,9 @@ def salir(self):
         sys.exit()
     else:
         msg.hide()
+def cargarTrasteros(self):
+    conexion.Conexion.cargarTrasteros(self)
+def cargarClientes(self):
+    conexion.Conexion.cargarClientes(self)
+def btnAlquilarTrastero(self):
+    conexion.Conexion.alquilarTrastero(self)

@@ -8,6 +8,57 @@ import informes
 
 
 class Informes:
+    def listClientes(self):
+        try:
+            name = datetime.today().strftime('%Y_%m_%d_%H_%M_%S') + '_listadoClientes.pdf'
+            file = 'informes/' + name
+            var.report = canvas.Canvas(file)
+            titulo = 'LISTADO CLIENTES'
+            Informes.pieInforme(titulo)
+            Informes.topInforme(titulo)
+            items = ['ID', 'Nombre', 'Telefono', 'Direccion', 'FechaBaja']
+            var.report.setFont('Helvetica-Bold', size= 10)
+            var.report.drawString(65, 675, str(items[0]))
+            var.report.drawString(130, 675, str(items[1]))
+            var.report.drawString(270, 675, str(items[2]))
+            var.report.drawString(370, 675, str(items[3]))
+            var.report.drawString(460, 675, str(items[4]))
+            var.report.line(50,670,525,670)
+            query = QtSql.QSqlQuery()
+            query.prepare('select Id_cliente, Nombre, Telefono, Direccion, FechaBaja '
+                          'from Clientes order by Id_cliente')
+            var.report.setFont('Helvetica', size = 9)
+            if query.exec():
+                i = 55
+                j = 655
+                while query.next():
+                    if j <= 80:
+                        var.report.drawString(460,90, 'Página siguiente...')
+                        var.report.showPage()
+                        Informes.topInforme(titulo)
+                        Informes.pieInforme(titulo)
+                        var.report.setFont('Helvetica-Bold', size=10)
+                        var.report.drawString(60, 675, str(items[0]))
+                        var.report.drawString(130, 675, str(items[1]))
+                        var.report.drawString(270, 675, str(items[2]))
+                        var.report.drawString(370, 675, str(items[3]))
+                        var.report.drawString(460, 675, str(items[4]))
+                        var.report.line(50, 670, 525, 670)
+                        i = 55
+                        j = 660
+                    var.report.setFont('Helvetica', size=9)
+                    var.report.drawString(i,j, str(query.value(0)))
+                    var.report.drawString(i+70,j,str(query.value(1)))
+                    var.report.drawString(i+215,j, str(query.value(2)))
+                    var.report.drawString(i+325,j, str(query.value(3)))
+                    var.report.drawString(i+410,j, str(query.value(4)))
+                    j = j - 25
+            var.report.save()
+            rootPath = '.\\informes'
+            os.startfile('%s\%s' % (rootPath, name))
+
+        except Exception as error:
+            print('Error informes estado clientes' %str(error))
     def listTrasteros(self):
         try:
             name = datetime.today().strftime('%Y_%m_%d_%H_%M_%S') + '_listadoTrasteros.pdf'

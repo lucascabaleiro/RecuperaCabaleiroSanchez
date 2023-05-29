@@ -1,5 +1,5 @@
 import conexion
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtSql
 import sys
 
 import informes
@@ -24,6 +24,15 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnSalir.triggered.connect(events.salir)
         var.ui.actionSalir.triggered.connect(events.salir)
         var.ui.actionListado_Trasteros.triggered.connect(informes.Informes.listTrasteros)
+        var.ui.btnAltaCliente.clicked.connect(events.btnInsertarCliente)
+        var.ui.tableClientes.clicked.connect(conexion.Conexion.cargarCliente)
+        var.ui.btnBajaCliente.clicked.connect(events.btnBajaCliente)
+        var.ui.actionListado_Clientes.triggered.connect(informes.Informes.listClientes)
+        conexion.Conexion.mostrarClientes(self)
+        events.cargarTrasteros(self)
+        events.cargarClientes(self)
+        conexion.Conexion.mostrarAlquileres(self)
+        var.ui.btnCrearAlquiler.clicked.connect(events.btnAlquilarTrastero)
 
 if __name__ == '__main__':
     conexion.Conexion.db_connect('bdrecupera.db')
