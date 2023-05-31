@@ -8,10 +8,13 @@ import var
 import events
 from ventanamain import *
 from events import *
+from dialogcalendar import *
+import datetime
 class Main(QtWidgets.QMainWindow):
     def __init__(self):
         super(Main, self).__init__()
         var.ui = Ui_Main()
+        var.dlgcalendar = DialogCalendar()
         var.ui.setupUi(self)
         var.ui.btnAlta.clicked.connect(events.btn_instertar)
         var.ui.btnBaja.clicked.connect(events.btn_baja)
@@ -33,10 +36,24 @@ class Main(QtWidgets.QMainWindow):
         events.cargarClientes(self)
         conexion.Conexion.mostrarAlquileres(self)
         var.ui.btnCrearAlquiler.clicked.connect(events.btnAlquilarTrastero)
+        var.ui.btnBajaAlquiler.clicked.connect(events.btnBajaAlquiler)
+        var.ui.btnCalendar.clicked.connect(events.abrirCalendar)
+
+
+class DialogCalendar(QtWidgets.QDialog):
+    def __init__(self):
+        super(DialogCalendar, self).__init__()
+        var.dlgcalendar = Ui_Dialog()
+        var.dlgcalendar.setupUi(self)
+        dia = datetime.datetime.now().day
+        mes = datetime.datetime.now().month
+        ano = datetime.datetime.now().year
+        var.dlgcalendar.calendar.clicked.connect(conexion.Conexion.cargarFecha)
+
 
 if __name__ == '__main__':
     conexion.Conexion.db_connect('bdrecupera.db')
     app = QtWidgets.QApplication([])
     window = Main()
-    window.show()
+    window.showMaximized()
     sys.exit(app.exec())

@@ -67,7 +67,7 @@ class Conexion():
         if var.ui.rbtLibres.isChecked():
             index = 0
             query = QtSql.QSqlQuery()
-            query.prepare('select Id_trastero, M2, Precio, Alquilado, FechaBaja from trasteros where Alquilado = "no" and FechaBaja IS NULL')
+            query.prepare('select Id_trastero, M2, Precio, Alquilado, FechaBaja from trasteros where Alquilado = "no"  AND FechaBaja IS NULL')
             if query.exec():
                 while query.next():
                     Id = query.value(0)
@@ -124,7 +124,6 @@ class Conexion():
         elif alquilado =="no":
             var.ui.rbtNo.setChecked(True)
     def modificarTrastero(self):
-        print("aaaa")
         m2 = var.ui.edtM2.text()
         precio = var.ui.edtPrecio.text()
         id = var.ui.lblid.text()
@@ -249,7 +248,6 @@ class Conexion():
                 Id = query.value(0)
                 var.ui.cmbClientes.addItem(str(Id))
     def mostrarAlquileres(self):
-        print("aaaa")
         index = 0
         query = QtSql.QSqlQuery()
         query.prepare(
@@ -290,3 +288,30 @@ class Conexion():
             msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
             msg.setText(query.lastError().text())
             msg.exec()
+    def desalquilarTrastero(self):
+        fila = var.ui.tableAlquileres.currentRow()
+        id = var.ui.tableAlquileres.item(fila, 2).text()
+        query = QtSql.QSqlQuery()
+        query.prepare('update trasteros set Alquilado = "no" where Id_trastero=:id')
+        query.bindValue(':id', id)
+        if query.exec():
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle('Aviso')
+            msg.setIcon(QtWidgets.QMessageBox.Icon.Information)
+            msg.setText('Trastero liberado')
+            msg.exec()
+            conexion.Conexion.cargarTrasteros(self)
+            conexion.Conexion.mostrarAlquileres(self)
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle('Aviso')
+            msg.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+            msg.setText(query.lastError().text())
+            msg.exec()
+    def cargarFecha(qDate):
+        try:
+            data = ('{0}/{1}/{2}'.format(qDate.day(),qDate.month(),qDate.year()))
+            var.ui.edtFechaAlquiler.setText(str(data))
+            var.dlgcalendar.hide()
+        except Exception as error:
+            print('Error al cargar la fecha: %s ' % str(error))

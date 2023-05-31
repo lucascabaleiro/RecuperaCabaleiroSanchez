@@ -20,6 +20,7 @@ def limpiar(self):
     var.ui.edtNombreCliente.setText('')
     var.ui.edtDireccionCliente.setText('')
     var.ui.edtTelefonoCliente.setText('')
+    var.ui.edtFechaAlquiler.setText('')
     msg = QtWidgets.QMessageBox()
     msg.setWindowTitle('Aviso')
     msg.setIcon(QtWidgets.QMessageBox.Icon.Information)
@@ -42,3 +43,10 @@ def cargarClientes(self):
     conexion.Conexion.cargarClientes(self)
 def btnAlquilarTrastero(self):
     conexion.Conexion.alquilarTrastero(self)
+def btnBajaAlquiler(self):
+    conexion.Conexion.desalquilarTrastero(self)
+def abrirCalendar(self):
+    try:
+        var.dlgcalendar.show()
+    except Exception as error:
+        print('Error: %s ' % str(error))
