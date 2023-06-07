@@ -10,6 +10,8 @@ from ventanamain import *
 from events import *
 from dialogcalendar import *
 import datetime
+import zipfile
+import shutil
 class Main(QtWidgets.QMainWindow):
     def __init__(self):
         super(Main, self).__init__()
@@ -38,6 +40,10 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnCrearAlquiler.clicked.connect(events.btnAlquilarTrastero)
         var.ui.btnBajaAlquiler.clicked.connect(events.btnBajaAlquiler)
         var.ui.btnCalendar.clicked.connect(events.abrirCalendar)
+        var.dlgabrir = DialogAbrir()
+        var.ui.btnCargarBackup.triggered.connect(events.crearBackup)
+        var.ui.btnCargarBackup.triggered.connect(events.restaurarBackup)
+        var.ui.actionExportar_en_CSV.triggered.connect(events.exportarDatos)
 
 
 class DialogCalendar(QtWidgets.QDialog):
@@ -49,6 +55,9 @@ class DialogCalendar(QtWidgets.QDialog):
         mes = datetime.datetime.now().month
         ano = datetime.datetime.now().year
         var.dlgcalendar.calendar.clicked.connect(conexion.Conexion.cargarFecha)
+class DialogAbrir(QtWidgets.QFileDialog):
+    def __init__(self):
+        super(DialogAbrir, self).__init__()
 
 
 if __name__ == '__main__':
