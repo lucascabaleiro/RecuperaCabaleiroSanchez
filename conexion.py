@@ -11,10 +11,8 @@ class Conexion():
         db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
         db.setDatabaseName(filename)
         if not db.open():
-            print('Conexión incorrecta')
             return False;
         else:
-            print('Conexion correcta')
             return True;
 
     def insertarTrastero(self):
@@ -35,6 +33,7 @@ class Conexion():
             msg.exec()
             #var.ui.tableTrasteros.clear()
             conexion.Conexion.mostrarTrasteros(self)
+            conexion.Conexion.cargarTrasteros(self)
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
@@ -57,6 +56,7 @@ class Conexion():
             msg.exec()
             #var.ui.tableTrasteros.clear()
             conexion.Conexion.mostrarTrasteros(self)
+            conexion.Conexion.cargarTrasteros(self)
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
@@ -145,6 +145,7 @@ class Conexion():
             msg.exec()
             #var.ui.tableTrasteros.clear()
             conexion.Conexion.mostrarTrasteros(self)
+            conexion.Conexion.cargarTrasteros(self)
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
@@ -251,37 +252,43 @@ class Conexion():
         index = 0
         query = QtSql.QSqlQuery()
         query.prepare(
-            'select Id_trastero, Cliente, FechaAlquiler, Alquilado from trasteros where Alquilado = "si" and FechaBaja IS NULL')
+            'select Id_trastero, Cliente, FechaAlquiler, FechaAlquilerFinal from trasteros where Alquilado = "si" and FechaBaja IS NULL')
         if query.exec():
             while query.next():
                 Id = query.value(0)
                 Cliente = query.value(1)
                 FechaAlquiler = query.value(2)
+                FechaFinalAlquiler = query.value(3)
                 var.ui.tableAlquileres.setRowCount(index + 1)
-                var.ui.tableAlquileres.setItem(index, 2, QtWidgets.QTableWidgetItem(str(Id)))
-                var.ui.tableAlquileres.item(index, 2).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+                var.ui.tableAlquileres.setItem(index, 1, QtWidgets.QTableWidgetItem(str(Id)))
+                var.ui.tableAlquileres.item(index, 1).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                 var.ui.tableAlquileres.setItem(index, 0, QtWidgets.QTableWidgetItem(str(Cliente)))
                 var.ui.tableAlquileres.item(index, 0).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-                var.ui.tableAlquileres.setItem(index, 3, QtWidgets.QTableWidgetItem(str(FechaAlquiler)))
+                var.ui.tableAlquileres.setItem(index, 2, QtWidgets.QTableWidgetItem(str(FechaAlquiler)))
+                var.ui.tableAlquileres.item(index, 2).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+                var.ui.tableAlquileres.setItem(index, 3, QtWidgets.QTableWidgetItem(str(FechaFinalAlquiler)))
                 var.ui.tableAlquileres.item(index, 3).setTextAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
                 index += 1
+
     def alquilarTrastero(self):
         trastero = var.ui.cmbTrasteros.currentText()
         cliente = var.ui.cmbClientes.currentText()
         fecha = var.ui.edtFechaAlquiler.text()
+        fechaFinal = var.ui.edtFechaAlquilerFinal.text()
         query = QtSql.QSqlQuery()
-        query.prepare('update trasteros set Cliente = :cliente, FechaAlquiler = :fecha, Alquilado = "si" where Id_trastero=:id')
+        query.prepare('update trasteros set Cliente = :cliente, FechaAlquiler = :fecha, FechaAlquilerFinal = :fechaFinal, Alquilado = "si" where Id_trastero=:id')
         query.bindValue(':cliente', cliente)
         query.bindValue(':id', trastero)
         query.bindValue(':fecha', fecha)
+        query.bindValue(':fechaFinal',fechaFinal)
         if query.exec():
+            conexion.Conexion.mostrarAlquileres(self)
+            conexion.Conexion.cargarTrasteros(self)
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
             msg.setIcon(QtWidgets.QMessageBox.Icon.Information)
             msg.setText('Alquiler realizado')
             msg.exec()
-            conexion.Conexion.mostrarAlquileres(self)
-            conexion.Conexion.cargarTrasteros(self)
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
@@ -290,18 +297,18 @@ class Conexion():
             msg.exec()
     def desalquilarTrastero(self):
         fila = var.ui.tableAlquileres.currentRow()
-        id = var.ui.tableAlquileres.item(fila, 2).text()
+        id = var.ui.tableAlquileres.item(fila, 1).text()
         query = QtSql.QSqlQuery()
         query.prepare('update trasteros set Alquilado = "no" where Id_trastero=:id')
         query.bindValue(':id', id)
         if query.exec():
+            conexion.Conexion.cargarTrasteros(self)
+            conexion.Conexion.mostrarAlquileres(self)
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
             msg.setIcon(QtWidgets.QMessageBox.Icon.Information)
             msg.setText('Trastero liberado')
             msg.exec()
-            conexion.Conexion.cargarTrasteros(self)
-            conexion.Conexion.mostrarAlquileres(self)
         else:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle('Aviso')
@@ -310,8 +317,15 @@ class Conexion():
             msg.exec()
     def cargarFecha(qDate):
         try:
-            data = ('{0}/{1}/{2}'.format(qDate.day(),qDate.month(),qDate.year()))
+            data = ('{0}-{1}-{2}'.format(qDate.year(),qDate.month(),qDate.day()))
             var.ui.edtFechaAlquiler.setText(str(data))
             var.dlgcalendar.hide()
+        except Exception as error:
+            print('Error al cargar la fecha: %s ' % str(error))
+    def cargarFecha2(qDate):
+        try:
+            data = ('{0}-{1}-{2}'.format(qDate.year(),qDate.month(),qDate.day()))
+            var.ui.edtFechaAlquilerFinal.setText(str(data))
+            var.dlgcalendar2.hide()
         except Exception as error:
             print('Error al cargar la fecha: %s ' % str(error))

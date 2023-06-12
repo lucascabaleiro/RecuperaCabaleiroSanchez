@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabTrasteros">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Trasteros">
        <attribute name="title">
@@ -783,18 +783,46 @@
             <property name="sizeConstraint">
              <enum>QLayout::SetFixedSize</enum>
             </property>
-            <item row="0" column="4">
-             <spacer name="horizontalSpacer_11">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="1" column="2">
+             <widget class="QComboBox" name="cmbClientes"/>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLineEdit" name="edtFechaAlquiler"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Clientes</string>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Fecha Alquiler Inicial</string>
               </property>
-             </spacer>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QPushButton" name="btnCalendar">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>img/calendar.png</normaloff>img/calendar.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Trasteros libres</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QComboBox" name="cmbTrasteros"/>
             </item>
             <item row="0" column="0">
              <spacer name="horizontalSpacer_9">
@@ -809,38 +837,31 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_8">
+            <item row="0" column="4">
+             <spacer name="horizontalSpacer_11">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_11">
               <property name="text">
-               <string>Trasteros libres</string>
+               <string>Fecha Alquiler Final</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="2">
-             <widget class="QComboBox" name="cmbTrasteros"/>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="edtFechaAlquilerFinal"/>
             </item>
-            <item row="1" column="2">
-             <widget class="QComboBox" name="cmbClientes"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>Clientes</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2">
-             <widget class="QLineEdit" name="edtFechaAlquiler"/>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Fecha Alquiler</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="3">
-             <widget class="QPushButton" name="btnCalendar">
+            <item row="3" column="3">
+             <widget class="QPushButton" name="btnCalendar2">
               <property name="text">
                <string/>
               </property>
@@ -864,17 +885,17 @@
             </column>
             <column>
              <property name="text">
-              <string>Nombre</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
               <string>Trastero</string>
              </property>
             </column>
             <column>
              <property name="text">
               <string>Fecha Alquiler</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>FechaAlquilerFinal</string>
              </property>
             </column>
            </widget>
@@ -1684,7 +1705,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btnGroupLibre"/>
   <buttongroup name="btnGroupTrasterosMostrar"/>
+  <buttongroup name="btnGroupLibre"/>
  </buttongroups>
 </ui>

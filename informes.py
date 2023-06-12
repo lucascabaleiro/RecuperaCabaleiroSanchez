@@ -2,7 +2,7 @@ import os, var, shutil
 from PyQt6 import QtSql, QtWidgets
 from reportlab.pdfgen import canvas
 from datetime import datetime
-
+from dateutil import parser
 import conexion
 import informes
 
@@ -162,6 +162,68 @@ class Informes:
                     os.startfile('%s\%s' % (rootPath, file))
         except Exception as error:
             print('Error informes estado vehiculos' %str(error))
+    def listAlquileres(self):
+        try:
+            name = datetime.today().strftime('%Y_%m_%d_%H_%M_%S') + '_listadoAlquileres.pdf'
+            file = 'informes/' + name
+            var.report = canvas.Canvas(file)
+            titulo = 'LISTADO ALQUILERES'
+            Informes.pieInforme(titulo)
+            Informes.topInforme(titulo)
+            items = ['Trastero', 'Cliente','Fecha inicio', 'Fecha fin', 'Precio total']
+            var.report.setFont('Helvetica-Bold', size=10)
+            var.report.drawString(65, 675, str(items[0]))
+            var.report.drawString(130, 675, str(items[1]))
+            var.report.drawString(270, 675, str(items[2]))
+            var.report.drawString(370, 675, str(items[3]))
+            var.report.drawString(460, 675, str(items[4]))
+            var.report.line(50, 670, 525, 670)
+            query = QtSql.QSqlQuery()
+            query.prepare('select Id_trastero, Cliente, FechaAlquiler, FechaAlquilerFinal, Precio from trasteros where Alquilado = "si" and FechaBaja IS NULL')
+            var.report.setFont('Helvetica', size=9)
+            if query.exec():
+                i = 55
+                j = 655
+                while query.next():
+                    if j <= 80:
+                        var.report.drawString(460, 90, 'Página siguiente...')
+                        var.report.showPage()
+                        Informes.topInforme(titulo)
+                        Informes.pieInforme(titulo)
+                        var.report.setFont('Helvetica-Bold', size=10)
+                        var.report.drawString(60, 675, str(items[0]))
+                        var.report.drawString(130, 675, str(items[1]))
+                        var.report.drawString(270, 675, str(items[2]))
+                        var.report.drawString(370, 675, str(items[3]))
+                        var.report.drawString(460, 675, str(items[4]))
+                        var.report.line(50, 670, 525, 670)
+                        i = 55
+                        j = 660
+                    var.report.setFont('Helvetica', size=9)
+                    var.report.drawString(i, j, str(query.value(0)))
+
+                    query2 = QtSql.QSqlQuery()
+                    query2.prepare('select Nombre from Clientes where Id_cliente = :id_cliente')
+                    query2.bindValue(':id_cliente',str(query.value(1)))
+                    nombre = ''
+                    if query2.exec():
+                        while query2.next():
+                            nombre = query2.value(0)
+                    var.report.drawString(i + 70, j, str(nombre))
+                    var.report.drawString(i + 215, j, str(query.value(2)))
+                    var.report.drawString(i + 325, j, str(query.value(3)))
+                    diaInicial = parser.parse(query.value(2))
+                    diaFinal = parser.parse(query.value(3))
+                    dias = diaFinal - diaInicial
+                    precio = dias.days * query.value(4)
+                    var.report.drawString(i + 410, j, str(precio) + "€")
+                    j = j - 25
+            var.report.save()
+            rootPath = '.\\informes'
+            os.startfile('%s\%s' % (rootPath, name))
+
+        except Exception as error:
+            print('Error informes estado alquileres' % str(error))
     def pieInforme(titulo):
         try:
             var.report.line(50,50,525,50)

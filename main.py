@@ -17,6 +17,7 @@ class Main(QtWidgets.QMainWindow):
         super(Main, self).__init__()
         var.ui = Ui_Main()
         var.dlgcalendar = DialogCalendar()
+        var.dlgcalendar2 = DialogCalendar2()
         var.ui.setupUi(self)
         var.ui.btnAlta.clicked.connect(events.btn_instertar)
         var.ui.btnBaja.clicked.connect(events.btn_baja)
@@ -33,6 +34,7 @@ class Main(QtWidgets.QMainWindow):
         var.ui.tableClientes.clicked.connect(conexion.Conexion.cargarCliente)
         var.ui.btnBajaCliente.clicked.connect(events.btnBajaCliente)
         var.ui.actionListado_Clientes.triggered.connect(informes.Informes.listClientes)
+        var.ui.actionListado_Alquileres.triggered.connect(informes.Informes.listAlquileres)
         conexion.Conexion.mostrarClientes(self)
         events.cargarTrasteros(self)
         events.cargarClientes(self)
@@ -44,6 +46,7 @@ class Main(QtWidgets.QMainWindow):
         var.ui.btnCargarBackup.triggered.connect(events.crearBackup)
         var.ui.btnCargarBackup.triggered.connect(events.restaurarBackup)
         var.ui.actionExportar_en_CSV.triggered.connect(events.exportarDatos)
+        var.ui.btnCalendar2.clicked.connect(events.abrirCalendar2)
 
 
 class DialogCalendar(QtWidgets.QDialog):
@@ -55,6 +58,15 @@ class DialogCalendar(QtWidgets.QDialog):
         mes = datetime.datetime.now().month
         ano = datetime.datetime.now().year
         var.dlgcalendar.calendar.clicked.connect(conexion.Conexion.cargarFecha)
+class DialogCalendar2(QtWidgets.QDialog):
+    def __init__(self):
+        super(DialogCalendar2, self).__init__()
+        var.dlgcalendar2 = Ui_Dialog()
+        var.dlgcalendar2.setupUi(self)
+        dia = datetime.datetime.now().day
+        mes = datetime.datetime.now().month
+        ano = datetime.datetime.now().year
+        var.dlgcalendar2.calendar.clicked.connect(conexion.Conexion.cargarFecha2)
 class DialogAbrir(QtWidgets.QFileDialog):
     def __init__(self):
         super(DialogAbrir, self).__init__()

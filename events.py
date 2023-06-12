@@ -56,6 +56,11 @@ def abrirCalendar(self):
         var.dlgcalendar.show()
     except Exception as error:
         print('Error: %s ' % str(error))
+def abrirCalendar2(self):
+    try:
+        var.dlgcalendar2.show()
+    except Exception as error:
+        print('Error: %s ' % str(error))
 def crearBackup(self):
     try:
         fecha = datetime.datetime.today()
